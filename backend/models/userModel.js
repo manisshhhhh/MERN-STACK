@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from 'bcryptjs'
 
 const userSchema = mongoose.Schema(
     {
@@ -17,6 +18,16 @@ const userSchema = mongoose.Schema(
         }
     }, {
     timestamps: true
+});
+
+// when we are create a user before save this password this middleware will run 
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        next();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 const User = mongoose.model('User', userSchema);

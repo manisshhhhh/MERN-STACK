@@ -9,6 +9,10 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 connectDB();
 const app = express();
 
+// body parser middleware 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
